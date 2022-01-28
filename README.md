@@ -15,4 +15,5 @@ studio 말고 code 쓰고싶음
 static public은 클래스 전체가 공유하는 자료형임 -> public은 객체에 종속하는 자료형임
  -> private은 뭔 차이지? 존재하지 않나? -> private은 클래스 내부에서만 사용 가능 protected는 상속한 클래스까지 사용 가능
 파일분류는 할 수 있게 됨 -> 근데 프로젝트에서 제외하니까 솔루션 탐색기에서 아예 보이지도 않게됨 -> .csproj 파일에서 관리할 수 있음
+virtual과 overridie 식별자로 가상함수를 이용할 수 있음
 ```
