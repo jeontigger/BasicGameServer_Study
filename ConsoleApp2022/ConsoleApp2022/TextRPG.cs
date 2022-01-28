@@ -1,16 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿//See https://aka.ms/new-console-template for more information
 
 ClassType choice = ClassType.None;
 while (choice == ClassType.None)
 {
     choice = ChooseClass();
-    if(choice != ClassType.None)
+    if (choice != ClassType.None)
     {
         // 캐릭터 생성
         // CreatePlayer()
         Player player;
-        
-        
+
+
         CreatePlayer(choice, out player);
         //Console.WriteLine($"HP{player.hp} Attack{player.attack}");
         // 기사(100/10) 궁수(75/12) 법사(50/15)
@@ -25,7 +25,7 @@ static void Fight(ref Player player, ref Monster monster)
     {
         // 플레이어가 몬스터 공격
         monster.hp -= player.attack;
-        if(monster.hp <= 0)
+        if (monster.hp <= 0)
         {
             Console.WriteLine("승리했습니다!");
             Console.WriteLine($"남은 체력 : {player.hp}");
@@ -34,7 +34,7 @@ static void Fight(ref Player player, ref Monster monster)
 
         // 몬스터가 플레이어 공격
         player.hp -= monster.attack;
-        if(player.hp <= 0)
+        if (player.hp <= 0)
         {
             Console.WriteLine("패배했습니다");
             break;
@@ -202,4 +202,3 @@ struct Monster
     public int hp;
     public int attack;
 }
-
