@@ -13,41 +13,20 @@ namespace CSharp
         Archer = 2,
         Mage = 3
     }
-    internal class Player
+    class Player : Creature
     {
         protected PlayerType type = PlayerType.None;
-        protected int hp = 0; 
-        protected int attack = 0;
 
-        protected Player(PlayerType type)
+        protected Player(PlayerType type): base(CreatureType.Player)
         {
             this.type = type;
         }
-        public void SetInfo(int hp, int attack)
-        {
-            this.hp = hp;
-            this.attack = attack;
-        }
-        public int GetHP() { return hp; }
-        public int GetAttack() { return attack; }
-    }
 
-    class Knight : Player
-    {
-        public Knight() : base(PlayerType.Knight)
-        {
 
-            type = PlayerType.Knight;
-            SetInfo(100, 10);
-            Console.WriteLine(GetHP());
-            Console.WriteLine(GetAttack());
-        }
+        
+        
+
+        
     }
-    class Archer: Player
-    {
-        public Archer(): base(PlayerType.Archer)
-        {
-            type = PlayerType.Archer;
-        }
-    }
+   
 }
