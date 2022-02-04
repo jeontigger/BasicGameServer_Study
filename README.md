@@ -17,3 +17,9 @@ static public은 클래스 전체가 공유하는 자료형임 -> public은 객�
 파일분류는 할 수 있게 됨 -> 근데 프로젝트에서 제외하니까 솔루션 탐색기에서 아예 보이지도 않게됨 -> .csproj 파일에서 관리할 수 있음
 virtual과 overridie 식별자로 가상함수를 이용할 수 있음
 ```
+## 자료구조 (2/4)
+```C#
+가변 배열: int[][] a = new int[2][]; a[0] = new int[3]; a[1] = new int[5];
+동적 배열 -> List
+Dictionary로 빠르게 탐색 가능
+```
