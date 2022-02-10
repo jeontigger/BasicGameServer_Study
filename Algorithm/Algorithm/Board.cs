@@ -20,6 +20,8 @@ namespace Algorithm
         {
             Empty,
             Wall,
+            Player,
+            Destination,
         }
 
         public void Initialize(int size, Player player)
@@ -147,8 +149,7 @@ namespace Algorithm
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    //player 좌표 가져와야 함
-                    if(y ==_player.PosY && x == _player.PosX)
+                    if (y == _player.PosY && x == _player.PosX)
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                     }
@@ -170,6 +171,10 @@ namespace Algorithm
                     return ConsoleColor.Green;
                 case TileType.Wall:
                     return ConsoleColor.DarkRed;
+                case TileType.Player:
+                    return ConsoleColor.DarkBlue;
+                case TileType.Destination:
+                    return ConsoleColor.DarkYellow;
                 default:
                     return ConsoleColor.Green;
             }
