@@ -1,20 +1,79 @@
 ﻿// See https://aka.ms/new-console-template for more information
 Stack<int> stack = new Stack<int>();
-
-stack.Push(101);
-stack.Push(102);
-stack.Push(103);
-stack.Push(104);
-stack.Push(105);
-
-int data = stack.Peek();
-
 Queue<int> queue = new Queue<int>();
-
 LinkedList<int> ll = new LinkedList<int>();
-
 Graph graph = new Graph();
-graph.Dijikstra(0);
+
+TreeNode<string> root = MakeTree();
+
+PriorityQueue<Knight> q = new PriorityQueue<Knight>();
+q.Push(new Knight() { Id = 20});
+q.Push(new Knight() { Id = 10 });
+q.Push(new Knight() { Id = 30 });
+q.Push(new Knight() { Id = 90 });
+q.Push(new Knight() { Id = 40 });
+while (q.Count() > 0)
+{
+    Console.WriteLine(q.pop().Id);
+}
+Console.WriteLine("hello");
+
+
+static int GetHeight(TreeNode<string> root)
+{
+    int height = 0;
+    foreach(TreeNode<string> child in root.Children)
+    {
+        int newHeight = GetHeight(child) + 1;
+        height = Math.Max(height, newHeight);
+    }
+
+    return height;
+}
+static TreeNode<string> MakeTree()
+{
+    TreeNode<string> root = new TreeNode<string>() { Data = "R1 개발실" };
+    {
+        {
+            TreeNode<string> node = new TreeNode<string>() { Data = "디자인팀" };
+            node.Children.Add(new TreeNode<string>() { Data = "전투" });
+            node.Children.Add(new TreeNode<string>() { Data = "경제" });
+            node.Children.Add(new TreeNode<string>() { Data = "스토리" });
+            root.Children.Add(node);
+        }
+        {
+            TreeNode<string> node = new TreeNode<string>() { Data = "프로그래밍팀" };
+            node.Children.Add(new TreeNode<string>() { Data = "서버" });
+            node.Children.Add(new TreeNode<string>() { Data = "클라" });
+            node.Children.Add(new TreeNode<string>() { Data = "엔진" });
+            root.Children.Add(node);
+        }
+        {
+            TreeNode<string> node = new TreeNode<string>() { Data = "아트팀" };
+            node.Children.Add(new TreeNode<string>() { Data = "배경" });
+            node.Children.Add(new TreeNode<string>() { Data = "캐릭터" });
+            root.Children.Add(node);
+        }
+    }
+    return root;
+}
+
+static void PrintTree(TreeNode<string> root)
+{
+    Console.WriteLine(root.Data);
+    foreach (TreeNode<string> child in root.Children)
+        PrintTree(child);
+}
+class Knight: IComparable<Knight>
+{
+    public int Id { get; set; }
+    public int CompareTo(Knight other)
+    {
+        if (Id == other.Id)
+            return 0;
+        return Id > other.Id ? 1 : -1;
+    }
+}
 class Graph
 {
     int[,] adj = new int[6, 6]
@@ -152,4 +211,66 @@ class Graph
                 DFS(now);
         }
     }
+}
+class TreeNode<T>
+{
+    public T Data { get; set; }
+    public List<TreeNode<T>> Children { get; set; } = new List<TreeNode<T>>();
+}
+class PriorityQueue<T> where T : IComparable<T>
+{
+    List<T> _heap = new List<T>();
+
+    public void Push(T data) 
+    {
+        // 힙의 맨 끝에 새로운 데이터를 삽입한다
+        _heap.Add(data);
+
+        int now = _heap.Count - 1;
+        while (now > 0)
+        {
+            int next = (now - 1) / 2;
+            if (_heap[now].CompareTo(_heap[next])<0)
+                break;
+
+            T temp = _heap[now];
+            _heap[now] = _heap[next];
+            _heap[next] = temp;
+            now = next;
+        }
+    }
+    public T pop() {
+        T ret = _heap[0];
+        int lastIndex = _heap.Count - 1;
+        _heap[0] = _heap[lastIndex];
+        _heap.RemoveAt(lastIndex);
+        lastIndex--;
+
+        int now = 0;
+        while (true)
+        {
+            int left = 2 * now + 1;
+            int right = 2 * now + 2;
+
+            int next = now;
+
+            if (left <= lastIndex && _heap[next].CompareTo(_heap[left]) < 0)
+                next = left;
+            if (right <= lastIndex && _heap[next].CompareTo(_heap[right]) < 0)
+                next = right;
+            if (next == now)
+                break;
+
+            T temp = _heap[now];
+            _heap[now] = _heap[next];
+            _heap[next] = temp;
+            now = next;
+        }
+        return ret;
+    }
+    public int Count()
+    {
+        return _heap.Count;
+    }
+
 }
