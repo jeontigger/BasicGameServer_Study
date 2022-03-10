@@ -3,16 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{153CF885-A377-4256-A6F6-A3F016DAFBB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{153CF885-A377-4256-A6F6-A3F016DAFBB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerCore", "ServerCore\ServerCore.csproj", "{3AD15EF9-D943-4559-B62F-B6EB468FB81B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCore", "ServerCore\ServerCore.csproj", "{3AD15EF9-D943-4559-B62F-B6EB468FB81B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyClient", "DummyClient\DummyClient.csproj", "{A8309438-2AD8-4BE0-A9D9-7E86900F02D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DummyClient", "DummyClient\DummyClient.csproj", "{A8309438-2AD8-4BE0-A9D9-7E86900F02D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9099BAC-E41A-47A0-B511-228F7F2770C1}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketGenerator", "PacketGenerator\PacketGenerator.csproj", "{CE4835F7-17DF-4BDB-A40B-1B310A6DF240}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A0ABACE1-89FD-495E-8586-B27C8B1DBD5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +36,16 @@ Global
 		{A8309438-2AD8-4BE0-A9D9-7E86900F02D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8309438-2AD8-4BE0-A9D9-7E86900F02D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8309438-2AD8-4BE0-A9D9-7E86900F02D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE4835F7-17DF-4BDB-A40B-1B310A6DF240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE4835F7-17DF-4BDB-A40B-1B310A6DF240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE4835F7-17DF-4BDB-A40B-1B310A6DF240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE4835F7-17DF-4BDB-A40B-1B310A6DF240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE4835F7-17DF-4BDB-A40B-1B310A6DF240} = {A0ABACE1-89FD-495E-8586-B27C8B1DBD5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF4697FB-2134-4AC7-BF68-DC33723AC4B7}
