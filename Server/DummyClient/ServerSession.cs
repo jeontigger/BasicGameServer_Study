@@ -8,113 +8,119 @@ using System.Threading.Tasks;
 
 namespace DummyClient
 {
-    
+	class PlayerInfoReq
+	{
+		public long playerId;
+		public string name;
+		public struct Skill
+		{
+			public int id;
+			public short level;
+			public float duration;
 
-    class PlayerInfoReq
-    {
-        public long playerId;
-        public string name;
+			public void Read(ReadOnlySpan<byte> s, ref ushort count)
+			{
+				this.id = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+				count += sizeof(int);
 
-        public struct SkillInfo
-        {
-            public int id;
-            public short level;
-            public float duration;
+				this.level = BitConverter.ToInt16(s.Slice(count, s.Length - count));
+				count += sizeof(short);
 
-            public bool Write(Span<byte>s, ref ushort count)
-            {
-                bool success = true;
-                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), id);
-                count += sizeof(int);
-                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), level);
-                count += sizeof(short);
-                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), duration);
-                count += sizeof(float);
+				this.duration = BitConverter.ToSingle(s.Slice(count, s.Length - count));
+				count += sizeof(float);
 
-                return success;
-            }
+			}
 
-            public void Read(ReadOnlySpan<byte> s, ref ushort count)
-            {
-                id = BitConverter.ToInt32(s.Slice(count, s.Length - count));
-                count += sizeof(int);
-                level = BitConverter.ToInt16(s.Slice(count, s.Length - count));
-                count += sizeof(short);
-                duration = BitConverter.ToSingle(s.Slice(count, s.Length - count));
-                count += sizeof(float);
-            }
-        }
+			public bool Write(Span<byte> s, ref ushort count)
+			{
+				bool success = true;
+				success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (int)this.id);
+				count += sizeof(int);
 
-        public List<SkillInfo> skills = new List<SkillInfo>();
+				success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (short)this.level);
+				count += sizeof(short);
 
-        public void Read(ArraySegment<byte> segment)
-        {
-            ushort count = 0;
+				success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (float)this.duration);
+				count += sizeof(float);
 
-            ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
-
-            count += sizeof(ushort);
-            count += sizeof(ushort);
-            this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length-count));
-            count += sizeof(long);
-
-            // string
-            ushort nameLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
-            count += sizeof(ushort);
-            this.name = Encoding.Unicode.GetString(s.Slice(count, nameLen));
-            count += nameLen;
-
-            // skill list
-            skills.Clear();
-            ushort skillLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
-            count += sizeof(ushort);
-            for(int i = 0; i < skillLen; i++)
-            {
-                SkillInfo skill = new SkillInfo();
-                skill.Read(s, ref count);
-                skills.Add(skill);
-            }
-
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-
-            ushort count = 0;
-            bool success = true;
-
-            Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+				return success;
+			}
 
 
-            count += sizeof(ushort);
-            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.PlayerInfoReq);
-            count += sizeof(ushort);
-            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
-            count += sizeof(long);
+		}
 
-            // string
-            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLen);
-            count += sizeof(ushort);
-            count += nameLen;
+		public List<Skill> skills = new List<Skill>();
 
-            // skill list
-            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)skills.Count);
-            count += sizeof(ushort);
-            foreach(SkillInfo skill in skills)
-                success &= skill.Write(s, ref count);
 
-            success &= BitConverter.TryWriteBytes(s, count);
+		public void Read(ArraySegment<byte> segment)
+		{
+			ushort count = 0;
 
-            if (success == false)
-                return null;
+			ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
 
-            return SendBufferHelper.Close(count);
-        }
-    }
+			count += sizeof(ushort);
+			count += sizeof(ushort);
 
-    public enum PacketID
+			this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length - count));
+			count += sizeof(long);
+
+			ushort nameLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+			count += sizeof(ushort);
+			this.name = Encoding.Unicode.GetString(s.Slice(count, nameLen));
+			count += nameLen;
+
+			this.skills.Clear();
+			ushort skillLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+			count += sizeof(ushort);
+			for (int i = 0; i < skillLen; i++)
+			{
+				Skill skill = new Skill();
+				skill.Read(s, ref count);
+				skills.Add(skill);
+			}
+
+
+		}
+
+		public ArraySegment<byte> Write()
+		{
+			ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+
+			ushort count = 0;
+			bool success = true;
+
+			Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+
+			count += sizeof(ushort);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.PlayerInfoReq);
+			count += sizeof(ushort);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (long)this.playerId);
+			count += sizeof(long);
+
+			ushort nameLen = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLen);
+			count += sizeof(ushort);
+			count += nameLen;
+
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.skills.Count);
+			count += sizeof(ushort);
+			foreach (Skill skill in skills)
+				success &= skill.Write(s, ref count);
+
+
+			success &= BitConverter.TryWriteBytes(s, count);
+
+			if (success == false)
+				return null;
+
+			return SendBufferHelper.Close(count);
+		}
+	}
+
+
+
+	public enum PacketID
     {
         PlayerInfoReq = 1,
         PlayerInfoOk = 2,
@@ -126,10 +132,10 @@ namespace DummyClient
         {
             Console.WriteLine($"OnConnected : {endPoint}");
             PlayerInfoReq packet = new PlayerInfoReq() { playerId = 1001, name = "ABCD" };
-            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 101, level = 1, duration = 3.0f });
-            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 201, level = 2, duration = 4.0f });
-            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 301, level = 3, duration = 5.0f });
-            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 401, level = 4, duration = 6.0f });
+            packet.skills.Add(new PlayerInfoReq.Skill() { id = 101, level = 1, duration = 3.0f });
+            packet.skills.Add(new PlayerInfoReq.Skill() { id = 201, level = 2, duration = 4.0f });
+            packet.skills.Add(new PlayerInfoReq.Skill() { id = 301, level = 3, duration = 5.0f });
+            packet.skills.Add(new PlayerInfoReq.Skill() { id = 401, level = 4, duration = 6.0f });
 
             //for (int i = 0; i < 5; i++)
             {
