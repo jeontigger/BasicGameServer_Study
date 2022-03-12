@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace DummyClient
 {
+	public enum PacketID
+	{
+		PlayerInfoReq = 1,
+		Test = 2,
+
+	}
+
 	class PlayerInfoReq
 	{
+		public byte testByte;
 		public long playerId;
 		public string name;
 		public struct Skill
@@ -61,6 +69,9 @@ namespace DummyClient
 			count += sizeof(ushort);
 			count += sizeof(ushort);
 
+			this.testByte = segment.Array[segment.Offset + count];
+			count += sizeof(byte);
+
 			this.playerId = BitConverter.ToInt64(s.Slice(count, s.Length - count));
 			count += sizeof(long);
 
@@ -95,6 +106,9 @@ namespace DummyClient
 			count += sizeof(ushort);
 			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.PlayerInfoReq);
 			count += sizeof(ushort);
+			segment.Array[segment.Offset + count] = this.testByte;
+			count += sizeof(byte);
+
 			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (long)this.playerId);
 			count += sizeof(long);
 
@@ -118,15 +132,7 @@ namespace DummyClient
 		}
 	}
 
-
-
-	public enum PacketID
-    {
-        PlayerInfoReq = 1,
-        PlayerInfoOk = 2,
-    }
-
-    class ServerSession : Session
+	class ServerSession : Session
     {
         public override void OnConnected(EndPoint endPoint)
         {

@@ -8,6 +8,26 @@ namespace PacketGenerator
 {
     internal class PacketFormat
     {
+
+        public static string fileFormat =
+@"using ServerCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+public enum PacketID
+{{
+    {0}
+}}
+
+{1}
+";
+
+        public static string packetEnumFormat =
+@"{0} = {1},";
         // {0} 패킷 이름
         // {1} 멤버 변수들
         // {2} 멤버 변수 Read
@@ -95,6 +115,11 @@ public List<{0}> {1}s = new List<{0}>();
 count += sizeof({2});
 ";
 
+        public static string readByteFormat =
+@"this.{0} = ({1})segment.Array[segment.Offset + count];
+count += sizeof({1});
+";
+
         // {0} 변수 이름
         public static string readStringFormat =
 @"ushort {0}Len = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
@@ -121,6 +146,13 @@ for(int i = 0; i < {1}Len; i++)
         // {1} 변수 형식
         public static string writeFormat =
 @"success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), ({1})this.{0});
+count += sizeof({1});
+";
+
+        // {0} 변수 이름
+        // {1} 변수 형식
+        public static string writeByteFormat =
+@"segment.Array[segment.Offset + count] = (byte)this.{0};
 count += sizeof({1});
 ";
 
