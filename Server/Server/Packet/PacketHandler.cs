@@ -17,10 +17,6 @@ internal class PacketHandler
             return;
         clientSession.Room.Broadcast(clientSession, chatPacket.chat);
 
-        foreach (C_PlayerInfoReq.Skill skill in p.skills)
-        {
-            Console.WriteLine($"Skill({skill.id})({skill.level})({skill.duration})");
-        }
     }
 
 }
